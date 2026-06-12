@@ -10,30 +10,30 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import express from "express";
-import { injectable, inject } from "inversify";
+import { HTTPErrors } from "./http-error.class.js";
+import { inject, injectable } from "inversify";
 import 'reflect-metadata';
-import { TYPES } from "./types.js";
-let App = class App {
+import { TYPES } from "../types.js";
+let ExeptionFilter = class ExeptionFilter {
     loggerService;
-    app;
-    port;
-    server;
     constructor(loggerService) {
         this.loggerService = loggerService;
-        this.app = express();
-        this.port = 5000;
     }
-    init() {
-        this.server = this.app.listen(this.port);
-        // console.log(`Server is running on port ${this.port}`);
-        this.loggerService.log(`Server start http://localhost: ${this.port}`);
+    catch(err, req, res, next) {
+        if (err instanceof HTTPErrors) {
+            this.loggerService.error(`[${err.context}] error ${err.statusCode}: ${err.message}`);
+            res.status(err.statusCode).send({ err: err.message });
+        }
+        else {
+            res.status(500).send({ err: err.message });
+        }
     }
+    ;
 };
-App = __decorate([
+ExeptionFilter = __decorate([
     injectable(),
     __param(0, inject(TYPES.ILoggerService)),
     __metadata("design:paramtypes", [Object])
-], App);
-export { App };
-//# sourceMappingURL=app.js.map
+], ExeptionFilter);
+export { ExeptionFilter };
+//# sourceMappingURL=exeption.filter.js.map
