@@ -1,10 +1,11 @@
 import { Router, Response } from "express";
 import { IControllerRoute } from "./route.interface.js";
+import { ILoggerService } from "../loggerService/logger.service.interface.js";
 
 export abstract class BaseController {
   private readonly _router: Router
 
-  constructor() {
+  constructor(private loggerService: ILoggerService) {
     this._router = Router()
   }
 
@@ -27,6 +28,7 @@ export abstract class BaseController {
 
   protected bindRoutes(routes: IControllerRoute[]) {
     routes.forEach((route) => {
+      this.loggerService.log(`[${route.method}] ${route.path}`)
       const hendler = route.func.bind(this)
       this.router[route.method](route.path, hendler)
     })
