@@ -5,6 +5,8 @@ import { injectable, inject } from "inversify";
 import 'reflect-metadata'
 import { TYPES } from "./types.js";
 import type { ILoggerService } from "./loggerService/logger.service.interface.js";
+import  bodyParser   from "body-parser";
+import type { IUserController } from "./users/user-controller.interface.js";
 
 @injectable()
 export class App { 
@@ -13,15 +15,25 @@ export class App {
   server!: Server;
 
   constructor(
-    @inject(TYPES.ILoggerService) private loggerService: ILoggerService
+    @inject(TYPES.ILoggerService) private loggerService: ILoggerService,
+    @inject(TYPES.IUserController) private userController: IUserController,
   ){
     this.app = express();
     this.port = 5000;
   }
 
-  public init() {
+  useMiddleware():void {
+    this.app.use(bodyParser.json())
+  }
+
+  useRoutes():void {
+    this.app.use('/users', this.userController.router)
+  }
+
+  public init(): void {
+    this.useMiddleware()
+    this.useRoutes()
     this.server = this.app.listen(this.port)
-    // console.log(`Server is running on port ${this.port}`);
     this.loggerService.log(`Server start http://localhost: ${this.port}`)
    }
 }
