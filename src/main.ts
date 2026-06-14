@@ -7,11 +7,16 @@ import { ExeptionFilter } from "./errors/exeption.filter.js"
 import { IExeptionFilter } from "./errors/exeption.filter.interface.js"
 import { IUserController } from "./users/user-controller.interface.js"
 import { UserController } from "./users/users-controller.js"
+import { IConfigService } from "./config/config.service.interface.js"
+import { ConfigService } from "./config/config.service.js"
+import { PrismaService } from "./database/prisma.service.js"
 
 export const appBinding = new ContainerModule((options: ContainerModuleLoadOptions) => {
   options.bind<ILoggerService>(TYPES.ILoggerService).to(LoggerService).inSingletonScope()
   options.bind<IExeptionFilter>(TYPES.IExeptionFilter).to(ExeptionFilter).inSingletonScope()
   options.bind<IUserController>(TYPES.IUserController).to(UserController).inSingletonScope()
+  options.bind<IConfigService>(TYPES.IConfigService).to(ConfigService).inSingletonScope()
+  options.bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope()
   options.bind<App>(TYPES.Application).to(App).inSingletonScope()
 })
 

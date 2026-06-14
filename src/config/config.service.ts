@@ -1,9 +1,11 @@
-import { inject } from "inversify";
+import { inject, injectable } from "inversify";
+import 'reflect-metadata'
 import { IConfigService } from "./config.service.interface.js";
 import { config, DotenvConfigOutput, DotenvParseOutput } from "dotenv";
 import { TYPES } from "../types.js";
 import type { ILoggerService } from "../loggerService/logger.service.interface.js";
 
+@injectable()
 export class ConfigService implements IConfigService{
   private config: DotenvParseOutput
   constructor(@inject(TYPES.ILoggerService) private loggerService: ILoggerService) {
