@@ -3,7 +3,7 @@ import { IMiddleware } from "./middleware.interface.js";
 import { ClassConstructor, plainToClass } from "class-transformer";
 import { validate } from "class-validator";
 
-export class validateMiddleware implements IMiddleware{
+export class ValidateMiddleware implements IMiddleware{
   constructor(private classToValidate: ClassConstructor<object>){}
   execute({ body }: Request, res: Response, next: NextFunction): void{
     const instance = plainToClass(this.classToValidate, body)

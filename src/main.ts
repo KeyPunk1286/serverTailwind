@@ -9,10 +9,10 @@ import { IUserController } from "./users/user-controller.interface.js"
 import { UserController } from "./users/users-controller.js"
 
 export const appBinding = new ContainerModule((options: ContainerModuleLoadOptions) => {
-  options.bind<ILoggerService>(TYPES.ILoggerService).to(LoggerService)
-  options.bind<IExeptionFilter>(TYPES.IExeptionFilter).to(ExeptionFilter)
-  options.bind<IUserController>(TYPES.IUserController).to(UserController)
-  options.bind<App>(TYPES.Application).to(App)
+  options.bind<ILoggerService>(TYPES.ILoggerService).to(LoggerService).inSingletonScope()
+  options.bind<IExeptionFilter>(TYPES.IExeptionFilter).to(ExeptionFilter).inSingletonScope()
+  options.bind<IUserController>(TYPES.IUserController).to(UserController).inSingletonScope()
+  options.bind<App>(TYPES.Application).to(App).inSingletonScope()
 })
 
 async function bootstrap() {
