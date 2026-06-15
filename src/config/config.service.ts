@@ -4,6 +4,7 @@ import { IConfigService } from "./config.service.interface.js";
 import { config, DotenvConfigOutput, DotenvParseOutput } from "dotenv";
 import { TYPES } from "../types.js";
 import type { ILoggerService } from "../loggerService/logger.service.interface.js";
+import { HTTPErrors } from "../errors/http-error.class.js";
 
 @injectable()
 export class ConfigService implements IConfigService{
@@ -17,10 +18,11 @@ export class ConfigService implements IConfigService{
       this.config = result.parsed as DotenvParseOutput
     }
   }
-  get(key: string): string | undefined{
+  get(key: string): string {
     const value = this.config[key]
     if (!value) {
       this.loggerService.error(`[ConfigService] Missing env variable: ${key}`)
+      throw new HTTPErrors(404, "not found", "ConfigService")
     }
     return value
   };

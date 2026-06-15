@@ -8,6 +8,9 @@ import type { ILoggerService } from "./loggerService/logger.service.interface.js
 import  bodyParser   from "body-parser";
 import type { IUserController } from "./users/user-controller.interface.js";
 import { PrismaService } from "./database/prisma.service.js";
+import { AuthMiddleware } from "./common/auth.middleware.js";
+import type { IConfigService } from "./config/config.service.interface.js";
+import type { IExeptionFilter } from "./errors/exeption.filter.interface.js";
 
 @injectable()
 export class App { 
@@ -17,8 +20,10 @@ export class App {
 
   constructor(
     @inject(TYPES.ILoggerService) private loggerService: ILoggerService,
+    @inject(TYPES.IExeptionFilter) private exeptionFilter: IExeptionFilter,
     @inject(TYPES.IUserController) private userController: IUserController,
     @inject(TYPES.PrismaService) private prismaService: PrismaService,
+    @inject(TYPES.IConfigService) private configService: IConfigService
   ){
     this.app = express();
     this.port = 5000;
@@ -26,10 +31,16 @@ export class App {
 
   useMiddleware():void {
     this.app.use(bodyParser.json())
+    const authMiddleware = new AuthMiddleware(this.configService.get('SECRET'))
+    this.app.use(authMiddleware.execute.bind(authMiddleware))
   }
 
   useRoutes():void {
     this.app.use('/users', this.userController.router)
+  }
+
+  useExeptionFilter(): void{
+    this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter))
   }
 
   public async init(): Promise<void> {
