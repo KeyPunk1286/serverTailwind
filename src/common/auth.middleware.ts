@@ -1,4 +1,5 @@
-import { JwtPayload, verify } from "jsonwebtoken";
+// import { JwtPayload, verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import type { IMiddleware } from "./middleware.interface.js";
 import { Request, Response, NextFunction } from "express";
 
@@ -14,14 +15,14 @@ constructor(private sicret: string){}
     if (!token) {
      return next()
     }
-    verify(token, this.sicret, (err, payload) => {
+    jwt.verify(token, this.sicret, (err, payload) => {
       if (err) {
         return next()
       }
       if (typeof payload === 'object' && payload !== null) {
         req.user = {
-          id: (payload as JwtPayload).id,
-          email: (payload as JwtPayload).email
+          id: (payload as jwt.JwtPayload).id,
+          email: (payload as jwt.JwtPayload).email
         }
       }
       next()

@@ -5,6 +5,6 @@ export class UserLoginDto{
     email: string
 
     @IsString()
-    @Length(2, 10, { message: 'Password  must be between 8 and 15 characters' })
+    @Length(2, 20, { message: 'Password  must be between 8 and 15 characters' })
     password: string
 }

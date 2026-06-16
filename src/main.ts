@@ -10,6 +10,10 @@ import { UserController } from "./users/users-controller.js"
 import { IConfigService } from "./config/config.service.interface.js"
 import { ConfigService } from "./config/config.service.js"
 import { PrismaService } from "./database/prisma.service.js"
+import { IUserRepository } from "./users/users.repository.interface.js"
+import { UsersRepository } from "./users/users-repository.js"
+import { IUserService } from "./users/uesers-service.interface.js"
+import { UsersService } from "./users/users-service.js"
 
 export const appBinding = new ContainerModule((options: ContainerModuleLoadOptions) => {
   options.bind<ILoggerService>(TYPES.ILoggerService).to(LoggerService).inSingletonScope()
@@ -17,6 +21,8 @@ export const appBinding = new ContainerModule((options: ContainerModuleLoadOptio
   options.bind<IUserController>(TYPES.IUserController).to(UserController).inSingletonScope()
   options.bind<IConfigService>(TYPES.IConfigService).to(ConfigService).inSingletonScope()
   options.bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope()
+  options.bind<IUserRepository>(TYPES.IUserRepository).to(UsersRepository).inSingletonScope()
+  options.bind<IUserService>(TYPES.IUserService).to(UsersService).inSingletonScope()
   options.bind<App>(TYPES.Application).to(App).inSingletonScope()
 })
 

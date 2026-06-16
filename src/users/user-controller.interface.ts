@@ -5,4 +5,6 @@ export interface IUserController{
   router: Router
   login: (req: Request, res: Response, next: NextFunction) => Promise<void>
   registration: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  getUser: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  update: (req: Request, res: Response, next: NextFunction) => Promise<void>
 }
