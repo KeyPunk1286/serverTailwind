@@ -6,11 +6,12 @@ import 'reflect-metadata'
 import { TYPES } from "./types.js";
 import type { ILoggerService } from "./loggerService/logger.service.interface.js";
 import  bodyParser   from "body-parser";
-import type { IUserController } from "./users/user-controller.interface.js";
+import type { IUserController } from "./users/interfaces/user-controller.interface.js";
 import { PrismaService } from "./database/prisma.service.js";
 import { AuthMiddleware } from "./common/auth.middleware.js";
 import type { IConfigService } from "./config/config.service.interface.js";
 import type { IExeptionFilter } from "./errors/exeption.filter.interface.js";
+import cors from "cors";
 
 @injectable()
 export class App { 
@@ -31,6 +32,9 @@ export class App {
 
   useMiddleware():void {
     this.app.use(bodyParser.json())
+    this.app.use(cors({
+      origin: '*'
+    }))
     const authMiddleware = new AuthMiddleware(this.configService.get('SECRET'))
     this.app.use(authMiddleware.execute.bind(authMiddleware))
   }

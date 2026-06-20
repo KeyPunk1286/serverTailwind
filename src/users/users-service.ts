@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import "reflect-metadata"
-import { IUserService } from "./uesers-service.interface.js";
+import { IUserService } from "./interfaces/uesers-service.interface.js";
 import { TYPES } from "../types.js";
-import type { IUserRepository } from "./users.repository.interface.js";
+import type { IUserRepository } from "./interfaces/users.repository.interface.js";
 import type { ILoggerService } from "../loggerService/logger.service.interface.js";
 import { User } from "../generated/prisma/client.js";
 import { UserRegisterDto } from "./dto/user-registration.dto.js";
@@ -12,6 +12,7 @@ import { HTTPErrors } from "../errors/http-error.class.js";
 import { UserLoginDto } from "./dto/user-login.dto.js";
 import jwt from "jsonwebtoken";
 import { UserUpdateDto } from "./dto/user-udate.dto.js";
+import { ILoginResponse } from "./interfaces/user-response.interface.js";
 
 
 @injectable()
@@ -40,7 +41,7 @@ export class UsersService implements IUserService {
     }
   };
 
-  async login(dto: UserLoginDto): Promise<string> {
+  async login(dto: UserLoginDto): Promise<ILoginResponse> {
     try {
       const existUser = await this.usersRepository.findByEmail(dto.email)
       if (!existUser) {
@@ -57,8 +58,8 @@ export class UsersService implements IUserService {
       if (!isValid) {
         throw new HTTPErrors(401, "Wrong password", "[UsersService]")
       }
-      const jwt = this.sineJwt(existUser.id, existUser.email, this.configService.get("SECRET"))
-      return jwt
+      const jwt = await this.sineJwt(existUser.id, existUser.email, this.configService.get("SECRET"))
+      return {userData:existUser, jwt: jwt }
     } catch (error) {
       if (error instanceof HTTPErrors) {
         throw error

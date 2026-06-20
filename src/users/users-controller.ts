@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
 import "reflect-metadata";
 import { BaseController } from "../common/base.controller.js";
-import { IUserController } from "./user-controller.interface.js";
+import { IUserController } from "./interfaces/user-controller.interface.js";
 import { TYPES } from "../types.js";
 import type { ILoggerService } from "../loggerService/logger.service.interface.js";
 import { Request, Response, NextFunction } from "express";
 import { UserLoginDto } from "./dto/user-login.dto.js";
 import { UserRegisterDto } from "./dto/user-registration.dto.js";
 import { ValidateMiddleware } from "../common/validateMiddleware.js";
-import type { IUserService } from "./uesers-service.interface.js";
+import type { IUserService } from "./interfaces/uesers-service.interface.js";
 import { AuthGuard } from "../common/auth.guard.js";
 import { UserUpdateDto } from "./dto/user-udate.dto.js";
 
@@ -28,8 +28,12 @@ export class UserController extends BaseController implements IUserController{
   }
   async login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): Promise<void> {
     try {
-      const loginToken = await this.userService.login(req.body)
-      this.ok(res, {jwt: loginToken})
+      console.log('controllerUser', req.body);
+      
+      const loginRes = await this.userService.login(req.body)
+      console.log(loginRes);
+      
+      this.ok(res, loginRes)
     } catch (error) {
       next(error)
     }

@@ -14,7 +14,7 @@ export class UserRegisterDto{
   lastName: string
   
   @IsString()
-  @Length(2, 20, { message: 'Password  must be between 8 and 15 characters' })
+  @Length(5, 20, { message: 'Password  must be between 5 and 20 characters' })
   password: string
   
   @Length(0, 200, { message: 'Details must be up to 200 characters' })

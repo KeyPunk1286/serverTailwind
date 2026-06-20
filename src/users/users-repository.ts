@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import 'reflect-metadata'
-import { IUserRepository } from "./users.repository.interface.js";
+import { IUserRepository } from "./interfaces/users.repository.interface.js";
 import { TYPES } from "../types.js";
 import { PrismaService } from "../database/prisma.service.js";
 import type { User } from "../generated/prisma/client.js";
