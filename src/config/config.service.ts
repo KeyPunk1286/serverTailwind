@@ -1,29 +1,33 @@
-import { inject, injectable } from "inversify";
-import 'reflect-metadata'
-import { IConfigService } from "./config.service.interface.js";
-import { config, DotenvConfigOutput, DotenvParseOutput } from "dotenv";
-import { TYPES } from "../types.js";
-import type { ILoggerService } from "../loggerService/logger.service.interface.js";
-import { HTTPErrors } from "../errors/http-error.class.js";
+import { inject, injectable } from 'inversify';
+import 'reflect-metadata';
+import { IConfigService } from './config.service.interface.js';
+import { config, DotenvConfigOutput, DotenvParseOutput } from 'dotenv';
+import { TYPES } from '../types.js';
+import type { ILoggerService } from '../loggerService/logger.service.interface.js';
+import { HTTPErrors } from '../errors/http-error.class.js';
 
 @injectable()
-export class ConfigService implements IConfigService{
-  private config: DotenvParseOutput
-  constructor(@inject(TYPES.ILoggerService) private loggerService: ILoggerService) {
-    const result: DotenvConfigOutput = config()
+export class ConfigService implements IConfigService {
+  private config: DotenvParseOutput;
+  constructor(
+    @inject(TYPES.ILoggerService) private loggerService: ILoggerService
+  ) {
+    const result: DotenvConfigOutput = config();
     if (result.error) {
-      this.loggerService.log('[ConfigService] The .env file could not be read or is missing.')
+      this.loggerService.log(
+        '[ConfigService] The .env file could not be read or is missing.'
+      );
     } else {
-      this.loggerService.log('[ConfigService] The .env config is loaded')
-      this.config = result.parsed as DotenvParseOutput
+      this.loggerService.log('[ConfigService] The .env config is loaded');
+      this.config = result.parsed as DotenvParseOutput;
     }
   }
   get(key: string): string {
-    const value = this.config[key]
+    const value = this.config[key];
     if (!value) {
-      this.loggerService.error(`[ConfigService] Missing env variable: ${key}`)
-      throw new HTTPErrors(404, "not found", "ConfigService")
+      this.loggerService.error(`[ConfigService] Missing env variable: ${key}`);
+      throw new HTTPErrors(404, 'not found', 'ConfigService');
     }
-    return value
-  };
+    return value;
+  }
 }
