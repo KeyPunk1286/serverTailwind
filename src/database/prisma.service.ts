@@ -21,13 +21,15 @@ export class PrismaService {
   async connect(): Promise<void> {
     try {
       await this.client.$connect();
+      await this.client.$queryRaw`SELECT 1`;
       this.loggerService.log(
         '[PrismaService] Successful connection to the database'
       );
     } catch (error) {
-      if (error instanceof Error) {
-        this.loggerService.error('[PrismaService] Database connection error');
-      }
+      this.loggerService.error(
+        `[PrismaService] Database connection error ${error}`
+      );
+      throw error;
     }
   }
 

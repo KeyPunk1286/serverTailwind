@@ -54,14 +54,17 @@ export const appBinding = new ContainerModule(
 );
 
 async function bootstrap() {
-  const appContainer = new Container();
-  await appContainer.load(appBinding);
-  const app = appContainer.get<App>(TYPES.Application);
-  app.init();
-  return { appContainer, app };
+  try {
+    const appContainer = new Container();
+    await appContainer.load(appBinding);
+    const app = appContainer.get<App>(TYPES.Application);
+    await app.init();
+    console.log('App init');
+    return { appContainer, app };
+  } catch (error) {
+    console.error('Error during app initialization:', error);
+    process.exit(1);
+  }
 }
 
 export const appBootstrap = bootstrap();
-appBootstrap.then(({ app: _app, appContainer: _appContainer }) => {
-  console.log('App start');
-});
