@@ -62,6 +62,6 @@ async function bootstrap() {
 }
 
 export const appBootstrap = bootstrap();
-appBootstrap.then(({ app, appContainer }) => {
+appBootstrap.then(({ app: _app, appContainer: _appContainer }) => {
   console.log('App start');
 });
