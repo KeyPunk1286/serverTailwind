@@ -18,6 +18,10 @@ import { IUserRepository } from './users/interfaces/users.repository.interface.j
 import { UsersRepository } from './users/users-repository.js';
 import { IUserService } from './users/interfaces/uesers-service.interface.js';
 import { UsersService } from './users/users-service.js';
+import { IJwtService } from './jwt/interfaces/jwt.service.interface.js';
+import { JwtService } from './jwt/jwt.service.js';
+import { ICryptoService } from './ crypto/interfaces/crypto.service.interface.js';
+import { CryptoService } from './ crypto/crypto.service.js';
 
 export const appBinding = new ContainerModule(
   (options: ContainerModuleLoadOptions) => {
@@ -48,6 +52,14 @@ export const appBinding = new ContainerModule(
     options
       .bind<IUserService>(TYPES.IUserService)
       .to(UsersService)
+      .inSingletonScope();
+    options
+      .bind<IJwtService>(TYPES.IJwtService)
+      .to(JwtService)
+      .inSingletonScope();
+    options
+      .bind<ICryptoService>(TYPES.ICryptoService)
+      .to(CryptoService)
       .inSingletonScope();
     options.bind<App>(TYPES.Application).to(App).inSingletonScope();
   }

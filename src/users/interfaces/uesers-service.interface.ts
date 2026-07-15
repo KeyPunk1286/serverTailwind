@@ -1,4 +1,5 @@
 import type { User } from '../../generated/prisma/client.js';
+import { RefreshTokenDto } from '../dto/refresh-token.dto.js';
 import { UserLoginDto } from '../dto/user-login.dto.js';
 import { UserRegisterDto } from '../dto/user-registration.dto.js';
 import { UserUpdateDto } from '../dto/user-udate.dto.js';
@@ -9,4 +10,6 @@ export interface IUserService {
   login: (dto: UserLoginDto) => Promise<ILoginResponse>;
   getUser: (id?: number) => Promise<User | null>;
   update: (dto: UserUpdateDto, userId?: number) => Promise<User>;
+  refresh: (dto: RefreshTokenDto) => Promise<ILoginResponse>;
+  logout: (userId: number) => Promise<void>;
 }

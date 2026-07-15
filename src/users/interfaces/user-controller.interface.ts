@@ -4,6 +4,7 @@ import { Router } from 'express';
 export interface IUserController {
   router: Router;
   login: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  refresh: (req: Request, res: Response, next: NextFunction) => Promise<void>;
   registration: (
     req: Request,
     res: Response,
@@ -11,4 +12,5 @@ export interface IUserController {
   ) => Promise<void>;
   getUser: (req: Request, res: Response, next: NextFunction) => Promise<void>;
   update: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  logout: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

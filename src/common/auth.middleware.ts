@@ -21,8 +21,7 @@ export class AuthMiddleware implements IMiddleware {
       }
       if (typeof payload === 'object' && payload !== null) {
         req.user = {
-          id: (payload as jwt.JwtPayload).id,
-          email: (payload as jwt.JwtPayload).email,
+          id: Number(payload.sub),
         };
       }
       next();

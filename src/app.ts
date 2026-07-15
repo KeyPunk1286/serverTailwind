@@ -37,7 +37,9 @@ export class App {
         origin: '*',
       })
     );
-    const authMiddleware = new AuthMiddleware(this.configService.get('SECRET'));
+    const authMiddleware = new AuthMiddleware(
+      this.configService.get('ACCESS_SECRET')
+    );
     this.app.use(authMiddleware.execute.bind(authMiddleware));
   }
 
@@ -52,6 +54,7 @@ export class App {
   public async init(): Promise<void> {
     this.useMiddleware();
     this.useRoutes();
+    this.useExeptionFilter();
     await this.prismaService.connect();
     this.server = this.app.listen(this.port);
     this.loggerService.log(`Server start http://localhost: ${this.port}`);
