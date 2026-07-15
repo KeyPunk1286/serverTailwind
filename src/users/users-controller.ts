@@ -11,6 +11,8 @@ import { ValidateMiddleware } from '../common/validateMiddleware.js';
 import type { IUserService } from './interfaces/uesers-service.interface.js';
 import { AuthGuard } from '../common/auth.guard.js';
 import { UserUpdateDto } from './dto/user-udate.dto.js';
+import { RefreshTokenDto } from './dto/refresh-token.dto.js';
+import { HTTPErrors } from '../errors/http-error.class.js';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -25,6 +27,12 @@ export class UserController extends BaseController implements IUserController {
         method: 'post',
         func: this.login,
         middleware: [new ValidateMiddleware(UserLoginDto)],
+      },
+      {
+        path: '/refresh',
+        method: 'post',
+        func: this.refresh,
+        middleware: [new ValidateMiddleware(RefreshTokenDto)],
       },
       {
         path: '/registration',
@@ -44,6 +52,12 @@ export class UserController extends BaseController implements IUserController {
         func: this.update,
         middleware: [new AuthGuard()],
       },
+      {
+        path: '/logout',
+        method: 'post',
+        func: this.logout,
+        middleware: [new AuthGuard()],
+      },
     ]);
   }
   async login(
@@ -58,6 +72,19 @@ export class UserController extends BaseController implements IUserController {
       console.log(loginRes);
 
       this.ok(res, loginRes);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async refresh(
+    req: Request<{}, {}, RefreshTokenDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const result = await this.userService.refresh(req.body);
+      this.ok(res, result);
     } catch (error) {
       next(error);
     }
@@ -99,6 +126,19 @@ export class UserController extends BaseController implements IUserController {
       const userId = req.user?.id;
       const updateUserData = await this.userService.update(req.body, userId);
       this.ok(res, updateUserData);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      if (!req.user) {
+        throw new HTTPErrors(401, 'Unauthorized', '[UsersController]');
+      }
+      const userId = req.user.id;
+      await this.userService.logout(userId);
+      this.ok(res, 'Logged out successfully');
     } catch (error) {
       next(error);
     }

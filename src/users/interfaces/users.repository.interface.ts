@@ -7,4 +7,8 @@ export interface IUserRepository {
   findByEmail: (email: string) => Promise<User | null>;
   getUserById: (id: number) => Promise<User | null>;
   userUdate: (dto: UserUpdateDto, userId: number) => Promise<User>;
+  updateRefreshTokenHash: (
+    userId: number,
+    refreshTokenHash: string | null
+  ) => Promise<void>;
 }

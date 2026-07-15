@@ -10,8 +10,8 @@ export class ValidateMiddleware implements IMiddleware {
     validate(instance).then((errors) => {
       if (errors.length > 0) {
         const formaterErrors = errors.map((error) => ({
-          filed: error.property,
-          message: Object.values(error.constraints || {}),
+          field: error.property,
+          messages: Object.values(error.constraints || {}),
         }));
         res.status(422).send({
           status: 'error',

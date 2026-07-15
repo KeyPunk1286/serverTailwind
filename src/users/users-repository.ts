@@ -53,4 +53,18 @@ export class UsersRepository implements IUserRepository {
       },
     });
   }
+
+  async updateRefreshTokenHash(
+    userId: number,
+    refreshTokenHash: string | null
+  ): Promise<void> {
+    await this.prismaService.client.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        refreshTokenHash,
+      },
+    });
+  }
 }
